@@ -35,6 +35,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.label3 = new System.Windows.Forms.Label();
+            this.statusLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,7 +61,7 @@
             this.doneButton.Name = "doneButton";
             this.doneButton.Size = new System.Drawing.Size(75, 23);
             this.doneButton.TabIndex = 3;
-            this.doneButton.Text = "Done";
+            this.doneButton.Text = "Submit PIN";
             this.doneButton.UseVisualStyleBackColor = true;
             this.doneButton.Click += new System.EventHandler(this.doneButton_Click);
             // 
@@ -96,16 +97,29 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(184, 55);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(159, 65);
+            this.label3.Size = new System.Drawing.Size(162, 65);
             this.label3.TabIndex = 6;
             this.label3.Text = "1. Login to your Nest Account\r\n2. Review all information shown.\r\n3. Click the \"Ac" +
-    "cept\" button\r\n4. Enter the shown PIN below.\r\n5. Click the \"Done\" button.";
+    "cept\" button\r\n4. Enter the shown PIN below.\r\n5. Click the \"Submit PIN\" button.";
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.AutoSize = true;
+            this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.statusLabel.ForeColor = System.Drawing.Color.Black;
+            this.statusLabel.Location = new System.Drawing.Point(184, 670);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(188, 24);
+            this.statusLabel.TabIndex = 7;
+            this.statusLabel.Text = "Status: Not Submitted";
+            this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // NestConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(586, 671);
+            this.ClientSize = new System.Drawing.Size(586, 726);
+            this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.groupBox1);
@@ -130,5 +144,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label statusLabel;
     }
 }

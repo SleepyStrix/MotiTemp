@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Diagnostics;
 using System.Net;
+using Thermostat.NestModels;
+using Newtonsoft.Json;
 
 namespace Thermostat
 {
@@ -23,12 +25,24 @@ namespace Thermostat
         {
             using (WebClient webClient = new WebClient())
             {
-                string url = ConfigurationManager.AppSettings["Nest-Token-Request-Endpoint"];
-                url += "?client_id=" + ConfigurationManager.AppSettings["Nest-Product-Id"];
-                url += "&client_secret=" + ConfigurationManager.AppSettings["Nest-Product-Secret"];
-                url += "&code=" + pin;
-                url += "&grant_type=authorization";
+                string url = ConfigurationManager.AppSettings["Nest-Token-Request-FullUrl"];
+                url = url.Replace("{product_id}", ConfigurationManager.AppSettings["Nest-Product-Id"]);
+                url = url.Replace("{product_secret}", ConfigurationManager.AppSettings["Nest-Product-Secret"]);
+                url = url.Replace("{pin}", pin);
                 webClient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+
+                string postResult = webClient.UploadString(url, "");
+                TokenModel tokenModel = JsonConvert.DeserializeObject<TokenModel>(postResult);
+                if (string.IsNullOrWhiteSpace(tokenModel.access_token))
+                {
+                    throw new Exception("Token retireval failed");
+                }
+                else
+                {
+                    //save token json
+                    Properties.Settings.Default.TokenJSON = postResult;
+                }
+                Console.WriteLine("postResult: " + postResult);
             }
         }
     }
