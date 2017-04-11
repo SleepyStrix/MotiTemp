@@ -16,7 +16,7 @@ namespace Thermostat
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new NestConfigForm());
+            Application.Run(new Form1());
         }
     }
 }

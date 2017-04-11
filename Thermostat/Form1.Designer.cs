@@ -32,13 +32,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.trackBar2 = new System.Windows.Forms.TrackBar();
-            this.button1 = new System.Windows.Forms.Button();
+            this.configButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -91,19 +91,20 @@
             this.trackBar2.TabIndex = 4;
             this.trackBar2.Value = 70;
             // 
-            // button1
+            // configButton
             // 
-            this.button1.Location = new System.Drawing.Point(677, 11);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Config";
-            this.button1.UseVisualStyleBackColor = true;
+            this.configButton.Location = new System.Drawing.Point(677, 11);
+            this.configButton.Name = "configButton";
+            this.configButton.Size = new System.Drawing.Size(75, 23);
+            this.configButton.TabIndex = 6;
+            this.configButton.Text = "Config";
+            this.configButton.UseVisualStyleBackColor = true;
+            this.configButton.Click += new System.EventHandler(this.configButton_Click);
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.configButton);
             this.groupBox1.Location = new System.Drawing.Point(12, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(758, 40);
@@ -133,14 +134,14 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Your Buildings";
             // 
-            // button2
+            // button4
             // 
-            this.button2.Location = new System.Drawing.Point(20, 35);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(181, 69);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "Home";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button4.Location = new System.Drawing.Point(20, 206);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(181, 69);
+            this.button4.TabIndex = 2;
+            this.button4.Text = "Store";
+            this.button4.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
@@ -151,14 +152,14 @@
             this.button3.Text = "Grandma\'s House";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // button4
+            // button2
             // 
-            this.button4.Location = new System.Drawing.Point(20, 206);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(181, 69);
-            this.button4.TabIndex = 2;
-            this.button4.Text = "Store";
-            this.button4.UseVisualStyleBackColor = true;
+            this.button2.Location = new System.Drawing.Point(20, 35);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(181, 69);
+            this.button2.TabIndex = 0;
+            this.button2.Text = "Home";
+            this.button2.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -251,7 +252,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TrackBar trackBar2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button configButton;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox2;

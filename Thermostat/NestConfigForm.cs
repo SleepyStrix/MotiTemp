@@ -16,6 +16,7 @@ namespace Thermostat
         public NestConfigForm()
         {
             InitializeComponent();
+            webBrowser1.WebBrowserShortcutsEnabled = false;
             webBrowser1.Navigate(NestAPI.GetPinUrl()); //open the in-line browser to Nest's user auth page
             statusLabel.Text = "Status: Not Submitted";
             statusLabel.ForeColor = Color.Black;
@@ -31,7 +32,6 @@ namespace Thermostat
                 pin = pin.Replace(" ", ""); //remove spaces
                 Console.WriteLine(pin);
                 NestAPI.RequestToken(pin);
-                
                 statusLabel.Text = "Status: Success, close this window";
                 statusLabel.ForeColor = Color.Green;
             }
