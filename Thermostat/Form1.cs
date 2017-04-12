@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Thermostat.NestModels;
 
 namespace Thermostat
 {
@@ -16,7 +17,14 @@ namespace Thermostat
         public Form1()
         {
             InitializeComponent();
-            NestAPI.GetNestData();
+            //try 
+            //{
+                SetupForm();  
+            //}
+            //catch (Exception e)
+            //{
+                //throw e;
+            //
         }
 
         private NestConfigForm nestConfigForm;
@@ -27,6 +35,30 @@ namespace Thermostat
                 nestConfigForm = new NestConfigForm();
             }
             nestConfigForm.Show();
+        }
+
+        private void SetupForm()
+        {
+            NestRootModel nestRoot = NestAPI.GetNestData();
+            //test setting thermostat to 60F
+            ThermostatModel device = nestRoot.devices.thermostats.First().Value;
+            Console.WriteLine(device.device_id);
+            NestAPI.SetTargetTemperature(device, 60);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void motionTimeInput_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
