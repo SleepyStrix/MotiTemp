@@ -34,5 +34,17 @@ namespace Thermostat.Properties {
                 this["TokenJSON"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SettingsJSON {
+            get {
+                return ((string)(this["SettingsJSON"]));
+            }
+            set {
+                this["SettingsJSON"] = value;
+            }
+        }
     }
 }

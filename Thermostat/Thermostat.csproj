@@ -63,20 +63,22 @@
     <Compile Include="NestConfigForm.Designer.cs">
       <DependentUpon>NestConfigForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GeneralSetting.cs" />
-    <Compile Include="HomeSetting.cs" />
+    <Compile Include="StructureSetting.cs" />
     <Compile Include="ISaveable.cs" />
     <Compile Include="NestAPI.cs" />
+    <Compile Include="NestMain.cs" />
     <Compile Include="NestModels\NestApiModels.cs" />
     <Compile Include="NestModels\TokenModel.cs" />
-    <Compile Include="NestSetting.cs" />
     <Compile Include="NestWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Setting.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="TimeConsole.cs" />
+    <Compile Include="TimeStampedTimer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

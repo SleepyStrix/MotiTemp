@@ -8,6 +8,9 @@ namespace Thermostat
 {
     static class Program
     {
+        public static TimestampConsoleLocal localConsole = new TimestampConsoleLocal();
+        public static TimestampConsoleUtc utcConsole = new TimestampConsoleUtc();
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

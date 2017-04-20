@@ -18,6 +18,8 @@ namespace Thermostat
     /// </summary>
     public static class NestAPI
     {
+        public static string status = "";
+
         public static string GetPinUrl()
         {
             return ConfigurationManager.AppSettings["Nest-Pin-Url"];
@@ -42,8 +44,7 @@ namespace Thermostat
                 else
                 {
                     //save token json
-                    Properties.Settings.Default.TokenJSON = postResult;
-                    Properties.Settings.Default.Save();
+                    tokenModel.Save();
                 }
                 Console.WriteLine("postResult: " + postResult);
             }
@@ -54,8 +55,8 @@ namespace Thermostat
 
         public static NestRootModel GetNestData()
         {
-            //update data if it has been too long or if this is first retrieval.
-            if (apiRoot == null || (DateTime.UtcNow - lastRetrieved).TotalSeconds > 120)
+            //update data if it has been too long (more than 1 min) or if this is first retrieval.
+            if (apiRoot == null || (DateTime.UtcNow - lastRetrieved).TotalSeconds > 60)
             {
                 try
                 {
@@ -76,39 +77,16 @@ namespace Thermostat
             return apiRoot;
         }
 
-        /*private static string RequestNestJson(TokenModel tokenModel, string url, int redirectCount)
-        {
-            string json = "";
-            Console.WriteLine("url: " + url);
-            Console.WriteLine("redirect count: " + redirectCount);
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-            req.Method = "GET";
-            req.AllowAutoRedirect = false;
-            req.ContentType = "application/json";
-            req.Headers[HttpRequestHeader.Authorization] = "Bearer " + tokenModel.access_token;
-            using (HttpWebResponse response = (HttpWebResponse)req.GetResponse())
-            {
-                HttpStatusCode statusCode = response.StatusCode;
-                if (statusCode == HttpStatusCode.TemporaryRedirect)
-                {
-                    json = RequestNestJson(tokenModel, response.Headers[HttpResponseHeader.Location], ++redirectCount);
-                }
-                else
-                {
-                    //string redirectEndUrl = 
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        using (StreamReader reader = new StreamReader(stream))
-                        {
-                            json = reader.ReadToEnd();
-                            stream.Close();
-                        }
-                    }
-                }
-            }
-            return json;
-        }*/
 
+        /// <summary>
+        /// Handles all connection to nest devices and structures
+        /// </summary>
+        /// <param name="tokenModel"></param>
+        /// <param name="url"></param>
+        /// <param name="verb"></param>
+        /// <param name="data"></param>
+        /// <param name="redirectCount"></param>
+        /// <returns></returns>
         private static string HitNestAPI(TokenModel tokenModel, string url, string verb, string data, int redirectCount) {
             string result = "";
             Console.WriteLine("url: " + url);
@@ -150,7 +128,7 @@ namespace Thermostat
             return result;
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Set the target temparature of a thermostat.
         /// </summary>
         /// <param name="thermostat">Thermostat to modify</param>
@@ -168,6 +146,25 @@ namespace Thermostat
                 string data = @"{""target_temperature_f"": [target_temp]}";
                 data = data.Replace("[target_temp]", targetTemperatureF.ToString());
                 string result = HitNestAPI(tokenModel, url, "PUT", data, 0);
+            }
+        }*/
+
+        public static void SetThermostatHvacMode(ThermostatModel thermostat, string hvac_mode)
+        {
+            //if already has this hvac mode
+            if (thermostat.hvac_mode != null && thermostat.hvac_mode.Equals(hvac_mode, StringComparison.OrdinalIgnoreCase))
+            {
+                //do nothing
+            }
+            else
+            {
+                TokenModel tokenModel = JsonConvert.DeserializeObject<TokenModel>(Properties.Settings.Default.TokenJSON);
+                string url = string.Format("https://developer-api.nest.com/devices/thermostats/{0}", thermostat.device_id);
+                string data = @"{""hvac_mode"": ""[target_mode]""}";
+                data = data.Replace("[target_mode]", hvac_mode);
+                Console.WriteLine(data);
+                string result = HitNestAPI(tokenModel, url, "PUT", data, 0);
+                Console.WriteLine("Thermostat hvac_mode set to: " + hvac_mode);
             }
         }
     }
