@@ -19,6 +19,7 @@ namespace Thermostat
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            SettingCollection.LoadSettings();
             Application.Run(new Form1());
         }
     }

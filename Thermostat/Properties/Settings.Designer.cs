@@ -46,5 +46,17 @@ namespace Thermostat.Properties {
                 this["SettingsJSON"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StructureSettings {
+            get {
+                return ((string)(this["StructureSettings"]));
+            }
+            set {
+                this["StructureSettings"] = value;
+            }
+        }
     }
 }

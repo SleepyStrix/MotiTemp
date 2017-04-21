@@ -63,6 +63,7 @@
     <Compile Include="NestConfigForm.Designer.cs">
       <DependentUpon>NestConfigForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingCollection.cs" />
     <Compile Include="StructureSetting.cs" />
     <Compile Include="ISaveable.cs" />
     <Compile Include="NestAPI.cs" />

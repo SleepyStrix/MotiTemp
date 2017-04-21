@@ -8,6 +8,6 @@ namespace Thermostat
 {
     public interface ISaveable
     {
-        bool Save();
+        void Save();
     }
 }

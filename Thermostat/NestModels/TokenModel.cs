@@ -14,13 +14,12 @@ namespace Thermostat.NestModels
 
         public DateTimeOffset timestamp;
 
-        public bool Save() 
+        public void Save() 
         {
             timestamp = DateTimeOffset.UtcNow;
             string json = JsonConvert.SerializeObject(this);
             Properties.Settings.Default.TokenJSON = json;
             Properties.Settings.Default.Save();
-            return true;
         }
     }
 }

@@ -123,6 +123,7 @@
             0,
             0,
             0});
+            this.motionTimeInput.ValueChanged += new System.EventHandler(this.motionTimeInput_ValueChanged);
             // 
             // structuresPanel
             // 

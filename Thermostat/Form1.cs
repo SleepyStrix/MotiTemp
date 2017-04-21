@@ -33,46 +33,31 @@ namespace Thermostat
             nestConfigForm.Show();
         }
 
-        List<StructureSetting> structureSettings;
-
+        List<Button> structureButtons = new List<Button>();
         private void SetupForm()
         {
             NestRootModel nestRoot = NestAPI.GetNestData();
-
-            structureSettings = JsonConvert.DeserializeObject<List<StructureSetting>>(Properties.Settings.Default.SettingsJSON);
-            if (structureSettings == null)
-            {
-               structureSettings = new List<StructureSetting>();
-            }
+            SettingCollection.LoadSettings();
             foreach (StructureModel structure in nestRoot.structures.Values)
             {
-                Program.utcConsole.WriteLine("zoop");
                 //create button for each home
                 Button button = new Button();
                 button.Text = structure.name;
+                button.Font = new Font(button.Font.FontFamily, 16);
+                button.Size = new System.Drawing.Size(220, 60);
+                
                 button.Tag = structure.structure_id;
-                button.Size = new System.Drawing.Size(180, 60);
                 button.Click += new EventHandler(StructureButton_Click);
                 structuresPanel.Controls.Add(button);
-
-                bool found = false;
-                foreach (StructureSetting s in structureSettings)
-                {
-                    if (s.structure_id.Equals(structure.structure_id))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                {
-                    structureSettings.Add(new StructureSetting(structure.structure_id));
-                }
+                structureButtons.Add(button);
             }
             if (string.IsNullOrWhiteSpace(selected_structure_id))
             {
-                Program.utcConsole.WriteLine("dooot");
                 SelectStructure(nestRoot.structures.Values.First().structure_id);
+            }
+            else
+            {
+                SelectStructure(selected_structure_id); //reselect selected structure
             }
             
         }
@@ -80,17 +65,24 @@ namespace Thermostat
         private string selected_structure_id = "";
         private void SelectStructure(string structure_id)
         {
-            Program.utcConsole.WriteLine("yaaa");
-            selected_structure_id = structure_id;
-            foreach (StructureSetting s in structureSettings)
+            foreach (Button b in structureButtons)
             {
-                if (s.structure_id.Equals(structure_id))
+                if (b.Tag.ToString().Equals(structure_id))
                 {
-                    Program.utcConsole.WriteLine("yeet");
-                    onButton.Checked = s.on;
-                    offButton.Checked = !s.on;
-                    motionTimeInput.Value = (decimal)s.minutesUntilInactive;
+                    b.BackColor = Color.Green;
                 }
+                else
+                {
+                    b.BackColor = Color.Gray;
+                }
+            }
+            selected_structure_id = structure_id;
+            StructureSetting selected = SettingCollection.GetStructureSetting(selected_structure_id);
+            if (selected != null)
+            {
+                onButton.Checked = selected.on;
+                offButton.Checked = !selected.on;
+                motionTimeInput.Value = (decimal)selected.minutesUntilInactive;
             }
         }
 
@@ -103,23 +95,41 @@ namespace Thermostat
         {
             Button button = (Button)sender;
             Console.WriteLine(button.Text + " button clicked");
+            SelectStructure(button.Tag.ToString());
         }
 
         private void UpdateTimer_Tick(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Program.utcConsole.WriteLine("Update timer tick");
+            Program.localConsole.WriteLine("Update timer tick");
             NestMain.UpdateThemostatModes();
             //SetupForm();
         }
 
-        private void onButton_CheckedChanged(object sender, EventArgs e)
+        private void Save()
         {
 
         }
 
+        private void onButton_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("Checked change on");
+            StructureSetting s = SettingCollection.GetStructureSetting(selected_structure_id);
+            s.on = ((RadioButton)sender).Checked;
+            SettingCollection.SaveSettings();
+        }
+
         private void offButton_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("Checked change off");
+            StructureSetting s = SettingCollection.GetStructureSetting(selected_structure_id);
+            s.on = !((RadioButton)sender).Checked;
+            SettingCollection.SaveSettings();
+        }
 
+        private void motionTimeInput_ValueChanged(object sender, EventArgs e)
+        {
+            StructureSetting s = SettingCollection.GetStructureSetting(selected_structure_id);
+            s.minutesUntilInactive = (int)motionTimeInput.Value;
         }
     }
 }

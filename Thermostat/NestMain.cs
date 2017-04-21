@@ -51,20 +51,26 @@ namespace Thermostat
         /// </summary>
         public static void UpdateThemostatModes()
         {
+            Program.utcConsole.WriteLine("Updating Thermostats");
             NestRootModel data = NestAPI.GetNestData();
             //for all structures
             foreach (StructureModel structure in data.structures.Values)
             {
-                //if user is home
-                if (structure.away.Equals("home", StringComparison.OrdinalIgnoreCase))
+                Program.utcConsole.WriteLine("Trying structure:" + structure.structure_id);
+                //get settings for this structure
+                StructureSetting structureSetting = SettingCollection.GetStructureSetting(structure.structure_id);
+                //if MotiTemp is on for this home and user is home
+                if (structureSetting.on && structure.away.Equals("home", StringComparison.OrdinalIgnoreCase))
                 {
                     DateTimeOffset? lastMotion = GetTimeOfLastMotion(structure.structure_id);
                     if (lastMotion != null)
                     {
                         double timeSinceMotion = (DateTimeOffset.UtcNow - (DateTimeOffset)lastMotion).TotalMinutes;
-                        //if it has been at least 1 minute since last motion
-                        if (timeSinceMotion >= 1)
+                        int minTime = structureSetting.minutesUntilInactive;
+                        //if it has been at least 1 minute since last motion and less that 135 min
+                        if (timeSinceMotion >= minTime && timeSinceMotion < 135)
                         {
+                            Program.utcConsole.WriteLine("Setting eco mode on");
                             //set all thermostats in this structure to eco mode
                             List<ThermostatModel> thermostats = GetThermostats(structure.structure_id);
                             foreach (ThermostatModel thermostat in thermostats)
