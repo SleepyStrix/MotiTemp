@@ -22,28 +22,36 @@ namespace Thermostat
 
         public static DateTimeOffset? GetTimeOfLastMotion(string structure_id)
         {
-            NestRootModel nestData = NestAPI.GetNestData();
-            List<CameraModel> cameras = nestData.devices.cameras.Values.ToList();
-            DateTimeOffset? lastTime = null;
-            foreach (CameraModel cam in cameras)
+            try
             {
-                if (cam.structure_id != null && 
-                    cam.structure_id.Equals(structure_id, StringComparison.OrdinalIgnoreCase) &&
-                    cam.last_event != null && cam.last_event.has_motion)
+                NestRootModel nestData = NestAPI.GetNestData();
+                List<CameraModel> cameras = nestData.devices.cameras.Values.ToList();
+                DateTimeOffset? lastTime = null;
+                foreach (CameraModel cam in cameras)
                 {
-                    DateTimeOffset end_time = DateTimeOffset.Parse(cam.last_event.end_time);
-                    if (lastTime == null)
+                    if (cam.structure_id != null &&
+                        cam.structure_id.Equals(structure_id, StringComparison.OrdinalIgnoreCase) &&
+                        cam.last_event != null && cam.last_event.has_motion)
                     {
-                        lastTime = end_time;
-                    }
-                    else if (end_time > lastTime)
-                    {
-                        lastTime = end_time;
+                        DateTimeOffset end_time = DateTimeOffset.Parse(cam.last_event.end_time);
+                        if (lastTime == null)
+                        {
+                            lastTime = end_time;
+                        }
+                        else if (end_time > lastTime)
+                        {
+                            lastTime = end_time;
+                        }
                     }
                 }
+                Console.WriteLine(lastTime.ToString());
+                return lastTime;
             }
-            Console.WriteLine(lastTime.ToString());
-            return lastTime;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return null;
+            }
         }
 
         /// <summary>
@@ -51,35 +59,42 @@ namespace Thermostat
         /// </summary>
         public static void UpdateThemostatModes()
         {
-            Program.utcConsole.WriteLine("Updating Thermostats");
-            NestRootModel data = NestAPI.GetNestData();
-            //for all structures
-            foreach (StructureModel structure in data.structures.Values)
+            try
             {
-                Program.utcConsole.WriteLine("Trying structure:" + structure.structure_id);
-                //get settings for this structure
-                StructureSetting structureSetting = SettingCollection.GetStructureSetting(structure.structure_id);
-                //if MotiTemp is on for this home and user is home
-                if (structureSetting.on && structure.away.Equals("home", StringComparison.OrdinalIgnoreCase))
+                Program.utcConsole.WriteLine("Updating Thermostats");
+                NestRootModel data = NestAPI.GetNestData();
+                //for all structures
+                foreach (StructureModel structure in data.structures.Values)
                 {
-                    DateTimeOffset? lastMotion = GetTimeOfLastMotion(structure.structure_id);
-                    if (lastMotion != null)
+                    Program.utcConsole.WriteLine("Trying structure:" + structure.structure_id);
+                    //get settings for this structure
+                    StructureSetting structureSetting = SettingCollection.GetStructureSetting(structure.structure_id);
+                    //if MotiTemp is on for this home and user is home
+                    if (structureSetting.on && structure.away.Equals("home", StringComparison.OrdinalIgnoreCase))
                     {
-                        double timeSinceMotion = (DateTimeOffset.UtcNow - (DateTimeOffset)lastMotion).TotalMinutes;
-                        int minTime = structureSetting.minutesUntilInactive;
-                        //if it has been at least 1 minute since last motion and less that 135 min
-                        if (timeSinceMotion >= minTime && timeSinceMotion < 135)
+                        DateTimeOffset? lastMotion = GetTimeOfLastMotion(structure.structure_id);
+                        if (lastMotion != null)
                         {
-                            Program.utcConsole.WriteLine("Setting eco mode on");
-                            //set all thermostats in this structure to eco mode
-                            List<ThermostatModel> thermostats = GetThermostats(structure.structure_id);
-                            foreach (ThermostatModel thermostat in thermostats)
+                            double timeSinceMotion = (DateTimeOffset.UtcNow - (DateTimeOffset)lastMotion).TotalMinutes;
+                            int minTime = structureSetting.minutesUntilInactive;
+                            //if it has been at least 1 minute since last motion and less that 135 min
+                            if (timeSinceMotion >= minTime && timeSinceMotion < 135)
                             {
-                                TurnEcoModeOn(thermostat);
+                                Program.utcConsole.WriteLine("Setting eco mode on");
+                                //set all thermostats in this structure to eco mode
+                                List<ThermostatModel> thermostats = GetThermostats(structure.structure_id);
+                                foreach (ThermostatModel thermostat in thermostats)
+                                {
+                                    TurnEcoModeOn(thermostat);
+                                }
                             }
                         }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
         }
 
@@ -100,14 +115,21 @@ namespace Thermostat
         public static List<ThermostatModel> GetThermostats(string structure_id)
         {
             List<ThermostatModel> result = new List<ThermostatModel>();
-            NestRootModel data = NestAPI.GetNestData();
-            foreach (ThermostatModel thermostat in data.devices.thermostats.Values.ToList())
+            try
             {
-                if (thermostat.structure_id != null && thermostat.structure_id.Equals(structure_id, StringComparison.OrdinalIgnoreCase))
+                NestRootModel data = NestAPI.GetNestData();
+                foreach (ThermostatModel thermostat in data.devices.thermostats.Values.ToList())
                 {
-                    result.Add(thermostat);
+                    if (thermostat.structure_id != null && thermostat.structure_id.Equals(structure_id, StringComparison.OrdinalIgnoreCase))
+                    {
+                        result.Add(thermostat);
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            } 
             return result;
         }
     }

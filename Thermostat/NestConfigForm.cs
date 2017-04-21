@@ -34,6 +34,10 @@ namespace Thermostat
                 NestAPI.RequestToken(pin);
                 statusLabel.Text = "Status: Success, close this window";
                 statusLabel.ForeColor = Color.Green;
+                if (Program.form1 != null)
+                {
+                    Program.form1.SetupForm();
+                }
             }
             catch (Exception)
             {
@@ -42,7 +46,17 @@ namespace Thermostat
                 statusLabel.ForeColor = Color.Red;
                 webBrowser1.Navigate(NestAPI.GetPinUrl()); //go back to web page start
                 pinInput.Text = ""; //clear pin input
+                if (Program.form1 != null)
+                {
+                    Program.form1.SetupForm();
+                }
             }
+        }
+
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.TokenJSON = "";
+            Properties.Settings.Default.Save();
         }
     }
 }

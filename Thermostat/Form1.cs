@@ -34,32 +34,38 @@ namespace Thermostat
         }
 
         List<Button> structureButtons = new List<Button>();
-        private void SetupForm()
+        public void SetupForm()
         {
-            NestRootModel nestRoot = NestAPI.GetNestData();
-            SettingCollection.LoadSettings();
-            foreach (StructureModel structure in nestRoot.structures.Values)
+            try
             {
-                //create button for each home
-                Button button = new Button();
-                button.Text = structure.name;
-                button.Font = new Font(button.Font.FontFamily, 16);
-                button.Size = new System.Drawing.Size(220, 60);
-                
-                button.Tag = structure.structure_id;
-                button.Click += new EventHandler(StructureButton_Click);
-                structuresPanel.Controls.Add(button);
-                structureButtons.Add(button);
+                NestRootModel nestRoot = NestAPI.GetNestData();
+                SettingCollection.LoadSettings();
+                foreach (StructureModel structure in nestRoot.structures.Values)
+                {
+                    //create button for each home
+                    Button button = new Button();
+                    button.Text = structure.name;
+                    button.Font = new Font(button.Font.FontFamily, 16);
+                    button.Size = new System.Drawing.Size(220, 60);
+
+                    button.Tag = structure.structure_id;
+                    button.Click += new EventHandler(StructureButton_Click);
+                    structuresPanel.Controls.Add(button);
+                    structureButtons.Add(button);
+                }
+                if (string.IsNullOrWhiteSpace(selected_structure_id))
+                {
+                    SelectStructure(nestRoot.structures.Values.First().structure_id);
+                }
+                else
+                {
+                    SelectStructure(selected_structure_id); //reselect selected structure
+                }
             }
-            if (string.IsNullOrWhiteSpace(selected_structure_id))
+            catch (Exception e)
             {
-                SelectStructure(nestRoot.structures.Values.First().structure_id);
+                Console.WriteLine(e.ToString());
             }
-            else
-            {
-                SelectStructure(selected_structure_id); //reselect selected structure
-            }
-            
         }
 
         private string selected_structure_id = "";
@@ -105,31 +111,42 @@ namespace Thermostat
             //SetupForm();
         }
 
-        private void Save()
+        public void SetStatus(string status, Color color)
         {
-
+            Console.WriteLine(status);
+            statusLabel.Text = status;
+            statusLabel.ForeColor = color;
         }
 
         private void onButton_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("Checked change on");
             StructureSetting s = SettingCollection.GetStructureSetting(selected_structure_id);
-            s.on = ((RadioButton)sender).Checked;
-            SettingCollection.SaveSettings();
+            if (s != null)
+            {
+                s.on = ((RadioButton)sender).Checked;
+                SettingCollection.SaveSettings();
+            }
         }
 
         private void offButton_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("Checked change off");
             StructureSetting s = SettingCollection.GetStructureSetting(selected_structure_id);
-            s.on = !((RadioButton)sender).Checked;
-            SettingCollection.SaveSettings();
+            if (s != null)
+            {
+                s.on = !((RadioButton)sender).Checked;
+                SettingCollection.SaveSettings();
+            }
         }
 
         private void motionTimeInput_ValueChanged(object sender, EventArgs e)
         {
             StructureSetting s = SettingCollection.GetStructureSetting(selected_structure_id);
-            s.minutesUntilInactive = (int)motionTimeInput.Value;
+            if (s != null)
+            {
+                s.minutesUntilInactive = (int)motionTimeInput.Value;
+            }
         }
     }
 }

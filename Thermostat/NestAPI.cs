@@ -9,6 +9,7 @@ using System.Net;
 using Thermostat.NestModels;
 using Newtonsoft.Json;
 using System.IO;
+using System.Drawing;
 
 namespace Thermostat
 {
@@ -18,8 +19,6 @@ namespace Thermostat
     /// </summary>
     public static class NestAPI
     {
-        public static string status = "";
-
         public static string GetPinUrl()
         {
             return ConfigurationManager.AppSettings["Nest-Pin-Url"];
@@ -67,13 +66,16 @@ namespace Thermostat
                     apiRoot = JsonConvert.DeserializeObject<NestRootModel>(json);
                     lastRetrieved = DateTimeOffset.UtcNow; //update timestamp
                     Console.WriteLine(json);
+                    Program.SetStatus("Nest Connection Successful", Color.Green);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Getting Nest Data Failed with error: " + e.GetBaseException().ToString());
+                    Program.SetStatus("Nest Configuration Needed", Color.Red);
                     throw e;
                 }
             }
+
             return apiRoot;
         }
 

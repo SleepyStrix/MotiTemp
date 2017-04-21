@@ -36,6 +36,7 @@
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.label3 = new System.Windows.Forms.Label();
             this.statusLabel = new System.Windows.Forms.Label();
+            this.resetButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -114,11 +115,22 @@
             this.statusLabel.Text = "Status: Not Submitted";
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // resetButton
+            // 
+            this.resetButton.Location = new System.Drawing.Point(12, 691);
+            this.resetButton.Name = "resetButton";
+            this.resetButton.Size = new System.Drawing.Size(75, 23);
+            this.resetButton.TabIndex = 8;
+            this.resetButton.Text = "Reset";
+            this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
+            // 
             // NestConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(586, 726);
+            this.Controls.Add(this.resetButton);
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.webBrowser1);
@@ -145,5 +157,6 @@
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label statusLabel;
+        private System.Windows.Forms.Button resetButton;
     }
 }
